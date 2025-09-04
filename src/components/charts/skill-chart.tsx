@@ -8,12 +8,30 @@ interface Skill {
   level: number
   years: number
   projects: string[]
+  icon?: string
 }
 
 interface SkillChartProps {
   data: Skill[]
   type: 'radar' | 'timeline' | 'bar'
 }
+
+type RadarData = {
+  category: string
+  level: number
+}
+
+type TimelineData = {
+  name: string
+  years: number
+}
+
+type BarData = {
+  name: string
+  level: number
+}
+
+type ChartData = RadarData | TimelineData | BarData
 
 export function SkillChart({ data, type }: SkillChartProps) {
   const chartData = useMemo(() => {
@@ -31,20 +49,21 @@ export function SkillChart({ data, type }: SkillChartProps) {
       return Object.entries(categoryData).map(([category, { total, count }]) => ({
         category,
         level: Math.round(total / count)
-      }))
+      })) as RadarData[]
     }
 
     if (type === 'timeline') {
       return data
         .sort((a, b) => b.years - a.years)
         .slice(0, 6)
-        .map(skill => ({ name: skill.name, years: skill.years }))
+        .map(skill => ({ name: skill.name, years: skill.years })) as TimelineData[]
     }
 
-    return data.map(skill => ({ name: skill.name, level: skill.level }))
+    return data.map(skill => ({ name: skill.name, level: skill.level })) as BarData[]
   }, [data, type])
 
   if (type === 'radar') {
+    const radarData = chartData as RadarData[]
     return (
       <div className="w-full h-64 flex items-center justify-center">
         <div className="relative w-48 h-48">
@@ -64,8 +83,8 @@ export function SkillChart({ data, type }: SkillChartProps) {
             ))}
             
             {/* Category lines */}
-            {chartData.map((_, index) => {
-              const angle = (index * 360) / chartData.length - 90
+            {radarData.map((_, index) => {
+              const angle = (index * 360) / radarData.length - 90
               const x = 100 + Math.cos(angle * Math.PI / 180) * 80
               const y = 100 + Math.sin(angle * Math.PI / 180) * 80
               return (
@@ -84,9 +103,9 @@ export function SkillChart({ data, type }: SkillChartProps) {
 
             {/* Data polygon */}
             <polygon
-              points={chartData.map((item, index) => {
-                const angle = (index * 360) / chartData.length - 90
-                const radius = (item.level * 8)
+              points={radarData.map((item, index) => {
+                const angle = (index * 360) / radarData.length - 90
+                const radius = item.level * 8
                 const x = 100 + Math.cos(angle * Math.PI / 180) * radius
                 const y = 100 + Math.sin(angle * Math.PI / 180) * radius
                 return `${x},${y}`
@@ -97,8 +116,8 @@ export function SkillChart({ data, type }: SkillChartProps) {
             />
 
             {/* Labels */}
-            {chartData.map((item, index) => {
-              const angle = (index * 360) / chartData.length - 90
+            {radarData.map((item, index) => {
+              const angle = (index * 360) / radarData.length - 90
               const x = 100 + Math.cos(angle * Math.PI / 180) * 95
               const y = 100 + Math.sin(angle * Math.PI / 180) * 95
               return (
@@ -122,9 +141,10 @@ export function SkillChart({ data, type }: SkillChartProps) {
   }
 
   if (type === 'timeline') {
+    const timelineData = chartData as TimelineData[]
     return (
       <div className="space-y-4">
-        {chartData.map((item, index) => (
+        {timelineData.map((item, index) => (
           <div key={item.name} className="flex items-center space-x-4">
             <div className="w-20 text-sm text-muted-foreground">
               {item.years}+ years
@@ -136,7 +156,7 @@ export function SkillChart({ data, type }: SkillChartProps) {
               <div className="w-full bg-muted rounded-full h-2">
                 <div
                   className="bg-primary h-2 rounded-full transition-all duration-1000"
-                  style={{ width: `${(item.years / 5) * 100}%` }}
+                  style={{ width: `${Math.min((item.years / 5) * 100, 100)}%` }}
                 />
               </div>
             </div>
@@ -146,9 +166,11 @@ export function SkillChart({ data, type }: SkillChartProps) {
     )
   }
 
+  // Bar chart
+  const barData = chartData as BarData[]
   return (
     <div className="space-y-3">
-      {chartData.map((item) => (
+      {barData.map((item) => (
         <div key={item.name} className="space-y-2">
           <div className="flex justify-between text-sm">
             <span>{item.name}</span>

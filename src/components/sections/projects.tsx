@@ -74,7 +74,7 @@ export function ProjectsSection() {
   )
 }
 
-function ProjectCard({ project, index }: { project: any, index: number }) {
+function ProjectCard({ project, index }: { project: { technologies: string[]; [key: string]: any }, index: number }) {
   const [imageLoaded, setImageLoaded] = useState(false)
 
   return (

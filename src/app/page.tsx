@@ -5,11 +5,11 @@ import { ContactSection } from '@/components/sections/contact'
 
 export default function HomePage() {
   return (
-    <>
+    <div className="min-h-screen">
       <HeroSection />
       <SkillsSection />
       <ProjectsSection />
       <ContactSection />
-    </>
+    </div>
   )
 }

@@ -4,12 +4,14 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
+import { AIAssistant } from '@/components/ai-assistant'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Rahul Sarkar | Full-Stack Developer & AI/ML Engineer',
-  description: 'Experienced full-stack developer specializing in React, Node.js, Python, and AI/ML solutions.',
+  title: 'Rahul Sarkar | Data Scientist & Frappe Solution Architect',
+  description: 'Senior Data Scientist and Frappe/ERPNext Solution Architect specializing in ML/AI, business intelligence, and enterprise automation solutions.',
+  keywords: ['Data Scientist', 'Frappe Developer', 'ERPNext', 'Machine Learning', 'Business Intelligence', 'Solution Architecture'],
 }
 
 export default function RootLayout({
@@ -31,6 +33,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <AIAssistant />
         </ThemeProvider>
       </body>
     </html>

@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
-import { BlogHeader } from '@/components/blog/blog-header'
-import { BlogGrid } from '@/components/blog/blog-grid'
+import { BlogHeader } from '@/app/blog/blog-header'
+import { BlogGrid } from '@/app/blog/blog-grid'
 import { getBlogPosts } from '@/lib/blog'
 
 export const metadata: Metadata = {
